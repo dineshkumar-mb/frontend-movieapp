@@ -18,7 +18,7 @@ const CheckoutForm = () => {
     const cardElement = elements.getElement(CardElement);
     
     // Create a payment intent on the server
-    const response = await axios.post('http://localhost:6969/api/payment/create-payment-intent', {
+    const response = await axios.post('https://movie-3qhc.onrender.com/api/payment/create-payment-intent', {
       amount: 1000, // specify amount in cents
       currency: 'inr'
     });
