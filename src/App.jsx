@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "./App.css"; // Import custom CSS for additional styling
-import StripePayment from "./components/StripePayment";
+import StripePayment from "./components/StripePayment.jsx";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -26,16 +26,12 @@ function App() {
       <div className="row">
         {movies.map((movie) => (
           <div key={movie._id} className="col-md-4 mb-4">
-            <div className="card h-100 shadow-sm border-0 rounded">
-              <img src={movie.image} alt={movie.title} className="card-img-top rounded-top" />
+            <div className="card">
+              <img src={movie.image} alt={movie.title} className="card-img-top" />
               <div className="card-body">
-                <h5 className="card-title text-truncate">{movie.title}</h5>
-                <p className="card-text text-muted" style={{ height: "4rem", overflow: "hidden" }}>
-                  {movie.description}
-                </p>
-                <div className="d-flex justify-content-center mt-4">
-                  <StripePayment />
-                </div>
+                <h5 className="card-title">{movie.title}</h5>
+                <p className="card-text">{movie.description}</p>
+                <StripePayment />
               </div>
             </div>
           </div>
