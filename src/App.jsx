@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../src/App.css"; // Import the CSS file for styling
-import StripePayment from './components/StripePayment.jsx';
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import "./App.css"; // Import custom CSS for additional styling
+import StripePayment from "./components/StripePayment.jsx";
+
 function App() {
   const [movies, setMovies] = useState([]);
 
@@ -19,22 +21,23 @@ function App() {
   }, []);
 
   return (
-    
-    <div className="App">
-      <h1 className="app-title">Movie List</h1>
-      <div className="movie-list">
+    <div className="App container mt-5">
+      <h1 className="text-center mb-4">Movie List</h1>
+      <div className="row">
         {movies.map((movie) => (
-          <div key={movie._id} className="movie-card">
-            <img src={movie.image} alt={movie.title} className="movie-image" />
-            <h2 className="movie-title">{movie.title}</h2>
-            <p className="movie-description">{movie.description}</p>
-            <StripePayment />
+          <div key={movie._id} className="col-md-4 mb-4">
+            <div className="card">
+              <img src={movie.image} alt={movie.title} className="card-img-top" />
+              <div className="card-body">
+                <h5 className="card-title">{movie.title}</h5>
+                <p className="card-text">{movie.description}</p>
+                <StripePayment />
+              </div>
+            </div>
           </div>
         ))}
       </div>
-     
     </div>
-      
   );
 }
 
