@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get("https://movie-3qhc.onrender.com/movies");
+        const response = await axios.get("https://movie-3qhc.onrender.com/");
         console.log("Fetched movies:", response.data);
         setMovies(response.data);
       } catch (error) {
