@@ -1,8 +1,8 @@
-// frontend/src/StripePayment.js
 import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import axios from 'axios';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap'; // Import Bootstrap components
 
 const stripePromise = loadStripe('pk_test_51PfEQKIGMXT0myEMc0tW6LWBF03XGIQRKqP2cQeAdCq9sa3W4lDKcM9tGTJsYnzUa1tLIdMzQCc4NE4fP0v9XYPl00ZI4k9wkt');
 
@@ -10,38 +10,69 @@ const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentStatus, setPaymentStatus] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) return;
 
+    setIsLoading(true);
+    setPaymentStatus('');
+
     const cardElement = elements.getElement(CardElement);
-    
-    // Create a payment intent on the server
-    const response = await axios.post('https://movie-3qhc.onrender.com/api/payment/create-payment-intent', {
-      amount: 1000, // specify amount in cents
-      currency: 'inr'
-    });
-    const clientSecret = response.data.clientSecret;
 
-    // Confirm card payment
-    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: { card: cardElement }
-    });
+    try {
+      // Create a payment intent on the server
+      const response = await axios.post('https://movie-3qhc.onrender.com/api/payment/create-payment-intent', {
+        amount: 1000, // specify amount in cents
+        currency: 'inr'
+      });
+      const clientSecret = response.data.clientSecret;
 
-    if (error) {
-      setPaymentStatus(`Payment failed: ${error.message}`);
-    } else if (paymentIntent.status === 'succeeded') {
-      setPaymentStatus('Payment successful!');
+      // Confirm card payment
+      const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: { card: cardElement }
+      });
+
+      if (error) {
+        setPaymentStatus(`Payment failed: ${error.message}`);
+      } else if (paymentIntent.status === 'succeeded') {
+        setPaymentStatus('Payment successful!');
+      }
+    } catch (error) {
+      setPaymentStatus('Error creating payment intent.');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button type="submit" disabled={!stripe}>Pay</button>
-      <p>{paymentStatus}</p>
-    </form>
+    <Form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm">
+      <Form.Group className="mb-3">
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': { color: '#aab7c4' },
+              },
+              invalid: { color: '#9e2146' },
+            },
+          }}
+          className="p-2 border rounded"
+        />
+      </Form.Group>
+      <Button type="submit" variant="primary" disabled={!stripe || isLoading} className="w-100">
+        {isLoading ? <Spinner animation="border" size="sm" /> : 'Pay'}
+      </Button>
+      {paymentStatus && (
+        <Alert variant={paymentStatus.includes('successful') ? 'success' : 'danger'} className="mt-3">
+          {paymentStatus}
+        </Alert>
+      )}
+    </Form>
   );
 };
 
