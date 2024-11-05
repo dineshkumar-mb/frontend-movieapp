@@ -23,7 +23,7 @@ const CheckoutForm = () => {
 
     try {
       // Create a payment intent on the server
-      const response = await axios.post('https://movie-3qhc.onrender.com/api/payment', {
+      const response = await axios.post('https://movie-3qhc.onrender.com/api/payment/create-payment-intent', {
         amount: 150, // specify amount in cents
         currency: 'inr'
       });
