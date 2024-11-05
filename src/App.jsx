@@ -3,7 +3,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "../src/App.css"; // Import custom CSS for additional styling
 import StripePayment from "./components/StripePayment.jsx";
-import Navbar from "./components/Navbar.jsx";
+// import Navbar from "./components/Navbar.jsx";
 function App() {
   const [movies, setMovies] = useState([]);
 
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-     <Navbar/>
+     {/* <Navbar/> */}
     <div className="App container mt-5">
      
       <h1 className="text-center mb-4">Movie List</h1>
