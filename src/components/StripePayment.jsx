@@ -24,7 +24,7 @@ const CheckoutForm = () => {
     try {
       // Create a payment intent on the server
       const { data } = await axios.post('https://dynamic-biscotti-a377ea.netlify.app/apppayment/payment', {
-        amount: 150 * 10, // amount in cents for INR
+        amount: 150 * 5, // amount in cents for INR
         currency: 'inr',
       });
       const { clientSecret } = data;
