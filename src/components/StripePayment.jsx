@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import axios from 'axios';
-import { Form, Button, Alert, Spinner } from 'react-bootstrap'; // Import Bootstrap components
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 
 const stripePromise = loadStripe('pk_test_51PfEQKIGMXT0myEMc0tW6LWBF03XGIQRKqP2cQeAdCq9sa3W4lDKcM9tGTJsYnzUa1tLIdMzQCc4NE4fP0v9XYPl00ZI4k9wkt');
 
@@ -23,20 +23,20 @@ const CheckoutForm = () => {
 
     try {
       // Create a payment intent on the server
-      const response = await axios.post('https://dynamic-biscotti-a377ea.netlify.app/api/payment/create-payment-intent', {
-        amount: 150, // specify amount in cents
-        currency: 'inr'
+      const { data } = await axios.post('https://dynamic-biscotti-a377ea.netlify.app/apppayment/payment', {
+        amount: 150 * 10, // amount in cents for INR
+        currency: 'inr',
       });
-      const clientSecret = response.data.clientSecret;
+      const { clientSecret } = data;
 
       // Confirm card payment
       const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: { card: cardElement }
+        payment_method: { card: cardElement },
       });
 
       if (error) {
         setPaymentStatus(`Payment failed: ${error.message}`);
-      } else if (paymentIntent.status === 'succeeded') {
+      } else if (paymentIntent?.status === 'succeeded') {
         setPaymentStatus('Payment successful!');
       }
     } catch (error) {
